@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="todoMapper">
+	
+	<resultMap type="todo" id="todo_rm">
+	
+		<id property="todoNo" column="TODO_NO"/>
+		
+		<result property="todoTitle" 		column="TODO_TITLE"/>
+		<result property="todoStatus" 		column="TODO_ST"/>
+	</resultMap>
+
+	
+  	<select id="selectAll" resultMap="todo_rm">	
+  		SELECT TODO_NO, TODO_TITLE, TODO_ST
+  		FROM TODO
+  		WHERE TODO_ST = 'N'
+  		ORDER BY TODO_NO
+  	</select>
+  	
+  	<update id="deleteList">
+  		UPDATE TODO SET
+  		TODO_ST = 'Y'
+  		WHERE TODO_NO = ${todoNo}
+  	</update>
+  
+  	<insert id="insertList" parameterType="todo" useGeneratedKeys="true">
+  		<selectKey keyProperty="todoNo"  resultType="_int"  order="BEFORE">
+			SELECT SEQ_TODO_NO.NEXTVAL FROM DUAL
+		</selectKey>
+
+		INSERT INTO TODO VALUES( 
+			#{todoNo}, #{todoTitle}, DEFAULT
+		)
+  	</insert>
+
+</mapper>
+
+
