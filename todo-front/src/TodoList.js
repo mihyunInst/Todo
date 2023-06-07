@@ -12,6 +12,7 @@ function TodoList() {
             return res.json();
         })
         .then((data)=>{
+
             setTodos(data);
         });
 
@@ -77,7 +78,15 @@ function TodoList() {
   const handleToggleTodo = (index) => {
     const newTodos = [...todos];
     newTodos[index].isDone = !newTodos[index].isDone;
+
+    // 미완료/완료 상태 로컬스토리지에서 기억하기
+    if(newTodos[index].isDone) {
+      localStorage.setItem(`${newTodos[index].todoNo}`, newTodos[index].todoNo)
+    } else {
+      localStorage.removeItem(`${newTodos[index].todoNo}`)
+    }
     setTodos(newTodos);
+
   };
 
   return (
@@ -94,8 +103,8 @@ function TodoList() {
               "등록한 Todo가 없습니다!" : 
               todos.map((todo, index) => (
                 <li key={index}>
-                <span style={{ textDecoration: todo.isDone ? 'line-through' : 'none' }}>{todo.todoTitle}</span>
-                <button className="completeBtn" onClick={() => handleToggleTodo(index)}>{todo.isDone ? '미완료' : '완료'}</button>
+                <span style={{ textDecoration: localStorage.getItem(`${todo.todoNo}`) ? 'line-through' : 'none' }}>{todo.todoTitle}</span>
+                <button className="completeBtn" onClick={() => handleToggleTodo(index)}>{localStorage.getItem(`${todo.todoNo}`) ? '미완료' : '완료'}</button>
                 <button className="deleteBtn" onClick={() => handleDeleteTodo(index, todo.todoNo)}>삭제</button>
                 </li>
             ))
